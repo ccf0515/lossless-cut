@@ -20,10 +20,12 @@ export interface SegmentColorIndex {
   segColorIndex: number,
 }
 
-export interface ApparentSegmentBase extends SegmentColorIndex {
+export interface ApparentSegmentBase {
   start: number,
   end: number,
 }
+
+export interface ApparentSegmentWithColorIndex extends ApparentSegmentBase, SegmentColorIndex {}
 
 export const segmentTagsSchema = z.record(z.string(), z.string());
 
@@ -41,7 +43,7 @@ export interface Segment extends SegmentBase {
   name?: string | undefined,
 }
 
-export interface ApparentCutSegment extends ApparentSegmentBase {
+export interface ApparentCutSegment extends ApparentSegmentWithColorIndex {
   name: string;
   segId: string,
   tags?: SegmentTags | undefined;
@@ -70,7 +72,7 @@ export type EdlImportType = 'youtube' | EdlFileType;
 
 export type EdlExportType = 'csv' | 'tsv-human' | 'csv-human' | 'csv-frames' | 'srt' | 'llc';
 
-export type TunerType = 'wheelSensitivity' | 'keyboardNormalSeekSpeed' | 'keyboardSeekAccFactor';
+export type TunerType = 'wheelSensitivity' | 'keyboardNormalSeekSpeed' | 'keyboardSeekSpeed2' | 'keyboardSeekSpeed3' | 'keyboardSeekAccFactor';
 
 export interface RenderableWaveform {
   createdAt: Date,
@@ -99,6 +101,19 @@ export type ContextMenuTemplate = (MenuItemConstructorOptions | MenuItem)[];
 export type ExportMode = 'segments_to_chapters' | 'merge' | 'merge+separate' | 'separate';
 
 export type FilesMeta = Record<string, {
+  streams: FFprobeStream[];
+  formatData: FFprobeFormat;
+  chapters: FFprobeChapter[];
+}>
+
+export type CopyfileStreams = {
+  path: string;
+  streamIds: number[];
+}[]
+
+export interface Chapter { start: number, end: number, name?: string | undefined }
+
+export type AllFilesMeta = Record<string, {
   streams: FFprobeStream[];
   formatData: FFprobeFormat;
   chapters: FFprobeChapter[];
